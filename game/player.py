@@ -1,7 +1,7 @@
 from block import Block
 
 class Player(Block):
-    def __init__(self, x, y, color, outline_color):
+    def __init__(self, x, y, color="green", outline_color="white"):
         super().__init__(x, y, color, outline_color)
         self.x = x
         self.y = y
