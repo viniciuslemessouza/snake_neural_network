@@ -2,7 +2,7 @@ from player import Player
 from food import Food
 from display import Display
 
-FPS = 30
+FPS = 10
 
 class Game:
     def __init__(self):
@@ -19,6 +19,7 @@ class Game:
     def play(self):
         while self.display.running:
             self.draw()
+            self.player.update()
             self.display.update()
             self.display.clock.tick(FPS)
 

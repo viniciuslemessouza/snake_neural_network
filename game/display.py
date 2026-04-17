@@ -22,5 +22,5 @@ class Display:
                 break
 
     def draw(self, game_object):
-        pygame.draw.rect(self.surface, game_object.color, game_object.rect, 0, round(game_object.size*0.1))
-        pygame.draw.rect(self.surface, game_object.outline_color, game_object.rect, 1, round(game_object.size*0.1))
+        pygame.draw.rect(self.surface, game_object.color, game_object.rect, 0, round(game_object.tile * 0.1))
+        pygame.draw.rect(self.surface, game_object.outline_color, game_object.rect, 1, round(game_object.tile * 0.1))
