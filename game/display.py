@@ -8,12 +8,11 @@ class Display:
         self.height = height
         self.hud_width = hud_width
         self.clock = pygame.time.Clock()
-        self.screen = pygame.display.set_mode([width+hud_width, height])
+        self.surface = pygame.display.set_mode([width + hud_width, height])
         self.running = True
 
     def update(self):
         self.get_events()
-        self.screen.fill("black")
         pygame.display.flip()
 
     def get_events(self):
@@ -21,3 +20,7 @@ class Display:
             if event.type == pygame.QUIT:
                 self.running = False
                 break
+
+    def draw(self, game_object):
+        pygame.draw.rect(self.surface, game_object.color, game_object.rect, 0, round(game_object.size*0.1))
+        pygame.draw.rect(self.surface, game_object.outline_color, game_object.rect, 1, round(game_object.size*0.1))

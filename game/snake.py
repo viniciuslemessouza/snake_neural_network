@@ -18,8 +18,14 @@ class Game:
 
     def play(self):
         while self.display.running:
+            self.draw()
             self.display.update()
             self.display.clock.tick(FPS)
+
+    def draw(self):
+        self.display.surface.fill("black")
+        self.display.draw(self.player)
+        self.display.draw(self.food)
 
 if __name__ == "__main__":
     Game().play()
