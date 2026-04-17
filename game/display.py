@@ -7,4 +7,9 @@ class Display:
         self.width = width
         self.height = height
         self.hud_width = hud_width
-        pygame.display.set_mode(width+hud_width, height)
+        self.clock = pygame.time.Clock()
+        self.screen = pygame.display.set_mode(width+hud_width, height)
+
+    def update(self):
+        self.screen.fill("black")
+        pygame.display.flip()
