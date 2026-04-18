@@ -6,3 +6,6 @@ class Block:
         self.color = color
         self.outline_color = outline_color
         self.rect = [x, y, tile, tile]
+
+    def get_rect(self):
+        self.rect = [self.x, self.y, self.tile, self.tile]
