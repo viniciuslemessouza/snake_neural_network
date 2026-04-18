@@ -11,12 +11,29 @@ class Display:
         self.surface = pygame.display.set_mode([width + hud_width, height])
         self.running = True
 
-    def update(self):
-        self.get_events()
+    @staticmethod
+    def update():
         pygame.display.flip()
 
-    def get_events(self):
+    def get_events(self, player):
         for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT:
+                    if player.vx != 1:
+                        player.go_left()
+                        break
+                if event.key == pygame.K_RIGHT:
+                    if player.vx != -1:
+                        player.go_right()
+                        break
+                if event.key == pygame.K_UP:
+                    if player.vy != 1:
+                        player.go_up()
+                        break
+                if event.key == pygame.K_DOWN:
+                    if player.vy != -1:
+                        player.go_down()
+                        break
             if event.type == pygame.QUIT:
                 self.running = False
                 break
