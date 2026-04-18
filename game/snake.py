@@ -20,15 +20,19 @@ class Game:
 
     def play(self):
         while self.display.running:
-            self.draw()
-            self.player.update()
-            self.display.update()
+            self.update()
             self.display.clock.tick(FPS)
 
     def draw(self):
         self.display.surface.fill("black")
         self.display.draw(self.food)
         self.display.draw(self.player)
+
+    def update(self):
+        self.display.get_events(self.player)
+        self.player.update()
+        self.display.update()
+        self.draw()
 
 if __name__ == "__main__":
     Game().play()
