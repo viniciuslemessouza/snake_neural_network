@@ -26,7 +26,10 @@ class Game:
     def draw(self):
         self.display.surface.fill("black")
         self.display.draw(self.food)
-        self.display.draw(self.player)
+        for rect in self.player.body:
+            player = self.player
+            player.rect = rect
+            self.display.draw(self.player)
 
     def update(self):
         self.display.get_events(self.player)

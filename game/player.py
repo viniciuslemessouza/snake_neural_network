@@ -6,6 +6,15 @@ class Player(Block):
         self.vx = 0
         self.vy = 0
         self.body = []
+        self.length = 5
+
+    def increase_length(self):
+        if len(self.body) >= self.length:
+            self.body.pop(0)
+        if self.vx != 0 or self.vy != 0:
+            self.body.append(self.rect)
+        else:
+            self.body = [self.rect]
 
     def set_position(self, screen_width, screen_height):
         self.x = (screen_width // self.tile) // 2 * self.tile
@@ -32,5 +41,6 @@ class Player(Block):
         self.y += self.vy * self.tile
 
     def update(self):
-        self.get_rect()
         self.move()
+        self.get_rect()
+        self.increase_length()
