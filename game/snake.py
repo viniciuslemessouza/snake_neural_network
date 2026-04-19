@@ -21,21 +21,21 @@ class Game:
     def play(self):
         while self.display.running:
             self.update()
+            self.draw()
             self.display.clock.tick(FPS)
 
     def draw(self):
         self.display.surface.fill("black")
         self.display.draw(self.food)
         for rect in self.player.body:
-            player = self.player
-            player.rect = rect
+            self.player.rect = rect
             self.display.draw(self.player)
+        self.display.plot_hud()
 
     def update(self):
         self.display.get_events(self.player)
         self.player.update()
         self.display.update()
-        self.draw()
 
 if __name__ == "__main__":
     Game().play()

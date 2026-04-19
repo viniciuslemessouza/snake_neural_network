@@ -41,3 +41,6 @@ class Display:
     def draw(self, game_object):
         pygame.draw.rect(self.surface, game_object.color, game_object.rect, 0, round(game_object.tile * 0.1))
         pygame.draw.rect(self.surface, game_object.outline_color, game_object.rect, 1, round(game_object.tile * 0.1))
+
+    def plot_hud(self):
+        pygame.draw.line(self.surface, "white", [self.width, 0], [self.width, self.height], 2)
