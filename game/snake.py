@@ -11,7 +11,7 @@ class Game:
     def __init__(self):
         self.player = Player(0, 0)
         self.food = Food(0, 0)
-        self.display = Display(SCREEN_WIDTH, SCREEN_HEIGHT, HUD_WIDTH)
+        self.score = 0
         self.set_positions()
 
     def set_positions(self):
@@ -19,23 +19,49 @@ class Game:
         self.food.set_position(SCREEN_WIDTH, SCREEN_HEIGHT, self.player.body)
 
     def play(self):
-        while self.display.running:
+        while DISPLAY.running:
             self.update()
+            self.check_collisions()
             self.draw()
-            self.display.clock.tick(FPS)
+            DISPLAY.clock.tick(FPS)
 
     def draw(self):
-        self.display.surface.fill("black")
-        self.display.draw(self.food)
+        DISPLAY.surface.fill("black")
+        DISPLAY.draw(self.food)
         for rect in self.player.body:
             self.player.rect = rect
-            self.display.draw(self.player)
-        self.display.plot_hud()
+            DISPLAY.draw(self.player)
+        DISPLAY.plot_hud()
 
     def update(self):
-        self.display.get_events(self.player)
+        DISPLAY.get_events(self.player)
         self.player.update()
-        self.display.update()
+        DISPLAY.update()
+
+    def check_collisions(self):
+        if self.body_collision(self.player.rect) or self.wall_collision(self.player.x, self.player.y):
+            self.over()
+        if self.food_collision():
+            self.got_food()
+
+    def got_food(self):
+        self.score += 1
+        self.player.length += 1
+        self.food.set_position(SCREEN_WIDTH, SCREEN_HEIGHT, self.player.body)
+
+    def food_collision(self):
+        return self.player.rect == self.food.rect
+
+    def body_collision(self, rect):
+        return rect in self.player.body[:-1]
+
+    @staticmethod
+    def wall_collision(x, y):
+        return not 0 <= x < SCREEN_WIDTH or not 0 <= y < SCREEN_HEIGHT
+
+    def over(self):
+        self.__init__()
 
 if __name__ == "__main__":
+    DISPLAY = Display(SCREEN_WIDTH, SCREEN_HEIGHT, HUD_WIDTH)
     Game().play()
