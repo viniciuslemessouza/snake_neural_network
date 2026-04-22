@@ -31,7 +31,14 @@ class Game:
         for rect in self.player.body:
             self.player.rect = rect
             DISPLAY.draw(self.player)
+        self.display_info()
+
+    def display_info(self):
         DISPLAY.plot_hud()
+        DISPLAY.plot_text("Score", self.score, 0)
+        DISPLAY.plot_text("Length", self.player.length, 1)
+        DISPLAY.plot_text("Hunger", self.player.hunger, 2)
+        DISPLAY.plot_text("Steps", self.player.steps, 3)
 
     def update(self):
         DISPLAY.get_events(self.player)
@@ -47,6 +54,7 @@ class Game:
     def got_food(self):
         self.score += 1
         self.player.length += 1
+        self.player.hunger = 0
         self.food.set_position(SCREEN_WIDTH, SCREEN_HEIGHT, self.player.body)
 
     def food_collision(self):

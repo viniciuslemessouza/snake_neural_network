@@ -10,6 +10,7 @@ class Display:
         self.clock = pygame.time.Clock()
         self.surface = pygame.display.set_mode([width + hud_width, height])
         self.running = True
+        self.font = pygame.font.SysFont("Times New Roman", 20, True)
 
     @staticmethod
     def update():
@@ -44,3 +45,7 @@ class Display:
 
     def plot_hud(self):
         pygame.draw.line(self.surface, "white", [self.width, 0], [self.width, self.height], 2)
+
+    def plot_text(self, message, value, index):
+        text = self.font.render(f"{message}: {value}", True, "white")
+        self.surface.blit(text, [self.width + 20, index * 30 + 20])
