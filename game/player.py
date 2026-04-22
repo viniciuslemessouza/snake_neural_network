@@ -7,6 +7,8 @@ class Player(Block):
         self.vy = 0
         self.body = []
         self.length = 5
+        self.steps = 0
+        self.hunger = 0
 
     def increase_length(self):
         if len(self.body) >= self.length:
@@ -44,3 +46,6 @@ class Player(Block):
         self.move()
         self.get_rect()
         self.increase_length()
+        if self.vx != 0 or self.vy != 0:
+            self.steps += 1
+            self.hunger += 1
