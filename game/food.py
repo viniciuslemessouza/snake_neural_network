@@ -1,6 +1,6 @@
 import random
 
-from block import Block
+from game.block import Block
 
 class Food(Block):
     def __init__(self, x, y, color="#aa0000"):
