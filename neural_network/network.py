@@ -1,10 +1,11 @@
-from neuron import Neuron
+from neural_network.neuron import Neuron
 
 class Network:
     def __init__(self, structure):
         self.structure = structure
         self.net = []
         self.output = 0
+        self.fitness = 0
 
     def run(self, inputs):
         for neurons_per_layer in self.structure:
