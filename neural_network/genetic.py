@@ -22,9 +22,12 @@ class GeneticAlgorithm:
                 DISPLAY.clock.tick(FPS)
             self.game.over()
             self.record_network()
-            self.net_index += 1
-            if self.net_index == self.population_length:
-                self.net_index = 0
+            self.next_network()
+
+    def next_network(self):
+        self.net_index += 1
+        if self.net_index == self.population_length:
+            self.net_index = 0
 
     def run_network(self):
         inputs = self.get_inputs()
@@ -76,7 +79,7 @@ class GeneticAlgorithm:
         body_distance_x, body_distance_y = self.get_body_distance()
 
         return [wall_distance_up, wall_distance_down, wall_distance_left, wall_distance_right, food_distance_x,
-                food_distance_y, body_distance_x, body_distance_y, self.game.player.vx, self.game.player.vx]
+                food_distance_y, body_distance_x, body_distance_y, self.game.player.vy, self.game.player.vx]
 
     def get_body_distance(self):
         x = self.game.player.x
@@ -89,7 +92,7 @@ class GeneticAlgorithm:
                 body_dist_x = abs(self.game.player.x - x) / SCREEN_WIDTH
                 body_dist_y = abs(self.game.player.y - y) / SCREEN_HEIGHT
                 return [body_dist_x, body_dist_y]
-            if self.game.wall_collision(x, y) or (self.game.player.vx == 0 and self.game.player.vy == 0):
+            if self.game.wall_collision(x, y) or self.game.player.vx + self.game.player.vy == 0:
                 return [0, 0]
 
     def check_collisions(self):
