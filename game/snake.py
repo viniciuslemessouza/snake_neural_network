@@ -71,7 +71,7 @@ class Game:
                 break
 
     def check_collisions(self):
-        if self.body_collision() or self.wall_collision():
+        if self.body_collision() or self.wall_collision(self.player.x, self.player.y):
             self.over()
         if self.food_collision():
             self.got_food()
@@ -88,8 +88,9 @@ class Game:
     def body_collision(self):
         return self.player.rect in self.player.body[:-1]
 
-    def wall_collision(self):
-        return not 0 <= self.player.x < SCREEN_WIDTH or not 0 <= self.player.y < SCREEN_HEIGHT
+    @staticmethod
+    def wall_collision(x, y):
+        return not 0 <= x < SCREEN_WIDTH or not 0 <= y < SCREEN_HEIGHT
 
     def over(self):
         self.__init__()
