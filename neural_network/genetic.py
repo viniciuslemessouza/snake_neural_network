@@ -28,6 +28,10 @@ class GeneticAlgorithm:
         self.net_index += 1
         if self.net_index == self.population_length:
             self.net_index = 0
+            self.next_generation()
+
+    def next_generation(self):
+        pass
 
     def run_network(self):
         inputs = self.get_inputs()
