@@ -1,5 +1,11 @@
+from math import ceil
+from copy import deepcopy
+from random import random, uniform
+
 from neural_network.network import Network
-from game.snake import *
+from game.snake import Game, DISPLAY
+
+FPS = 60
 
 class GeneticAlgorithm:
     def __init__(self, population_length, structure):
@@ -8,39 +14,61 @@ class GeneticAlgorithm:
         self.population = [Network(self.structure) for _ in range(self.population_length)]
         self.game = Game()
         self.net_index = 0
+        self.gen_index = 0
+        self.parent_rate = 0.2
+        self.mutation_rate = 0.01
+        self.best_gen_fitness = 0
+        self.best_gen_score = 0
+        self.best_fitness = 0
+        self.best_score = 0
 
     def run(self):
         while DISPLAY.running:
             while not self.check_collisions() and DISPLAY.running:
                 self.game.draw()
+                self.plot_metrics()
                 self.run_network()
                 self.game.update()
                 if self.game.food_collision():
                     self.game.got_food()
-                if self.game.player.hunger >= 100:
+                if self.game.player.hunger >= 400:
                     break
                 DISPLAY.clock.tick(FPS)
-            self.game.over()
             self.record_network()
+            self.game.over()
+            self.save_metrics()
             self.next_network()
+
+    def save_metrics(self):
+        self.best_gen_fitness = max(network.fitness for network in self.population)
+        self.best_gen_score = max(network.score for network in self.population)
+        self.best_fitness = max(self.best_fitness, max(network.fitness for network in self.population))
+        self.best_score = max(self.best_score, max(network.score for network in self.population))
+
+    def plot_metrics(self):
+        DISPLAY.plot_text("Generation", self.gen_index+1, 5, "lightblue")
+        DISPLAY.plot_text("Network", self.net_index+1, 6, "lightblue")
+        DISPLAY.plot_text("Best Fitness", self.best_fitness, 7, "lightblue")
+        DISPLAY.plot_text("Best Score", self.best_score, 8, "lightblue")
+        DISPLAY.plot_text("Best Gen. Fit.", self.best_gen_fitness, 9, "lightblue")
+        DISPLAY.plot_text("Best Gen. Sco.", self.best_gen_score, 10, "lightblue")
 
     def next_network(self):
         self.net_index += 1
         if self.net_index == self.population_length:
             self.net_index = 0
-            self.next_generation()
-
-    def next_generation(self):
-        pass
+            self.gen_index += 1
+            self.population = self.next_generation()
 
     def run_network(self):
+        network = self.population[self.net_index]
         inputs = self.get_inputs()
-        self.population[self.net_index].run(inputs)
+        network.run(inputs)
         self.play_game()
 
     def play_game(self):
         output = self.population[self.net_index].output
-        move = output.index(max(output))
+        move = max(range(len(output)), key=output.__getitem__)
 
         if move == 0: # Left
             if self.game.player.vy == -1:
@@ -74,37 +102,119 @@ class GeneticAlgorithm:
                 self.game.player.go_right()
 
     def get_inputs(self):
-        wall_distance_up = self.game.player.x / SCREEN_WIDTH
-        wall_distance_down = self.game.player.y / SCREEN_HEIGHT
-        wall_distance_left = (SCREEN_WIDTH - self.game.player.x) / SCREEN_WIDTH
-        wall_distance_right = (SCREEN_HEIGHT - self.game.player.y) / SCREEN_HEIGHT
-        food_distance_x = (self.game.player.x - self.game.food.x) / SCREEN_WIDTH
-        food_distance_y = (self.game.player.y - self.game.food.y) / SCREEN_HEIGHT
-        body_distance_x, body_distance_y = self.get_body_distance()
+        player = self.game.player
+        food = self.game.food
 
-        return [wall_distance_up, wall_distance_down, wall_distance_left, wall_distance_right, food_distance_x,
-                food_distance_y, body_distance_x, body_distance_y, self.game.player.vy, self.game.player.vx]
+        x = player.x
+        y = player.y
+        tile = player.tile
 
-    def get_body_distance(self):
-        x = self.game.player.x
-        y = self.game.player.y
-        while True:
-            x += self.game.player.vx * self.game.player.tile
-            y += self.game.player.vy * self.game.player.tile
+        vx = player.vx
+        vy = player.vy
 
-            if [x, y, self.game.player.tile, self.game.player.tile] in self.game.player.body[:-1]:
-                body_dist_x = abs(self.game.player.x - x) / SCREEN_WIDTH
-                body_dist_y = abs(self.game.player.y - y) / SCREEN_HEIGHT
-                return [body_dist_x, body_dist_y]
-            if self.game.wall_collision(x, y) or self.game.player.vx + self.game.player.vy == 0:
-                return [0, 0]
+        # posições relativas
+        front_x = x + vx * tile
+        front_y = y + vy * tile
+
+        left_x = x - vy * tile
+        left_y = y + vx * tile
+
+        right_x = x + vy * tile
+        right_y = y - vx * tile
+
+        body = {(b[0], b[1]) for b in player.body[:-1]}
+
+        # perigo
+        danger_front = (
+                self.game.wall_collision(front_x, front_y)
+                or (front_x, front_y) in body
+        )
+
+        danger_left = (
+                self.game.wall_collision(left_x, left_y)
+                or (left_x, left_y) in body
+        )
+
+        danger_right = (
+                self.game.wall_collision(right_x, right_y)
+                or (right_x, right_y) in body
+        )
+
+        # comida relativa
+        food_front = 0
+        food_left = 0
+        food_right = 0
+
+        dx = food.x - x
+        dy = food.y - y
+
+        if vx == 1:  # direita
+            food_front = dx > 0
+            food_left = dy < 0
+            food_right = dy > 0
+
+        elif vx == -1:  # esquerda
+            food_front = dx < 0
+            food_left = dy > 0
+            food_right = dy < 0
+
+        elif vy == 1:  # baixo
+            food_front = dy > 0
+            food_left = dx > 0
+            food_right = dx < 0
+
+        elif vy == -1:  # cima
+            food_front = dy < 0
+            food_left = dx < 0
+            food_right = dx > 0
+
+        return [
+            int(danger_front),
+            int(danger_left),
+            int(danger_right),
+
+            int(food_front),
+            int(food_left),
+            int(food_right),
+
+            int(vx == -1),
+            int(vx == 1),
+            int(vy == -1),
+            int(vy == 1),
+        ]
 
     def check_collisions(self):
         return self.game.body_collision() or self.game.wall_collision(self.game.player.x, self.game.player.y)
 
     def record_network(self):
-        self.population[self.net_index].fitness = ((self.game.score * 100) + self.game.player.steps -
-                                                   (self.game.player.hunger * 8))
+        current_fitness = self.population[self.net_index].fitness
+        new_fitness = round((
+                self.game.score * 5000
+                + self.game.player.steps * 0.5
+                - self.game.player.hunger * 15
+        ) * 0.1)
+        self.population[self.net_index].fitness = max(current_fitness, new_fitness)
+        self.population[self.net_index].score = self.game.score
 
-genetic = GeneticAlgorithm(128, [10, 24, 24, 3])
+    def next_generation(self):
+        parents = deepcopy(self.get_parents())
+        parents_mutation = deepcopy(parents)
+        return parents + self.mutation(parents_mutation)
+
+    def get_parents(self):
+        self.population.sort(key=lambda x: x.fitness, reverse=True)
+        return self.population[:round(self.parent_rate*self.population_length)]
+
+    def mutation(self, parents):
+        mutation_range = self.population_length - len(parents)
+        nets = [deepcopy(parent) for parent in parents for _ in range(ceil(mutation_range / len(parents)))]
+        for net in nets:
+            for layer in net.net:
+                for neuron in layer:
+                    for weight_index in range(len(neuron.weights)):
+                        if random() <= self.mutation_rate:
+                            neuron.weights[weight_index] = uniform(-.1, .1)
+        return nets[:mutation_range]
+
+genetic = GeneticAlgorithm(1024, [10, 8, 3])
 genetic.run()
