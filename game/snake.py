@@ -5,7 +5,7 @@ from game.display import Display, pygame
 FPS = 10
 SCREEN_WIDTH = 1200
 SCREEN_HEIGHT = 800
-HUD_WIDTH = 200
+HUD_WIDTH = 300
 
 DISPLAY = Display(SCREEN_WIDTH, SCREEN_HEIGHT, HUD_WIDTH)
 
