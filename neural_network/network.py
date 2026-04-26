@@ -6,6 +6,7 @@ class Network:
         self.net = self.build_net()
         self.output = []
         self.fitness = 0
+        self.score = 0
 
     def build_net(self):
         net = []
