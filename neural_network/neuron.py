@@ -1,12 +1,16 @@
-import random
-import math
+from math import tanh
+from random import uniform
 
 class Neuron:
     def __init__(self, n_inputs):
-        self.weights = [random.uniform(-1, 1) for _ in range(n_inputs)]
-        self.bias = random.uniform(-.1, .1)
-        self.activation = lambda x: max(0, math.tanh(x))
+        self.weights = [uniform(-1, 1) for _ in range(n_inputs)]
+        self.bias = uniform(-1, 1)
+        self.activation = tanh
 
     def forward(self, inputs):
-        sign = sum(w * x  for w, x in zip(self.weights, inputs)) + self.bias
+        weights = self.weights
+        sign = self.bias
+
+        for i in range(len(weights)):
+            sign += weights[i] * inputs[i]
         return self.activation(sign)
