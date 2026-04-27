@@ -1,3 +1,6 @@
+import os.path
+import pickle
+
 from math import ceil
 from copy import deepcopy
 from random import random, uniform
@@ -11,7 +14,7 @@ class GeneticAlgorithm:
     def __init__(self, population_length, structure):
         self.population_length = population_length
         self.structure = structure
-        self.population = [Network(self.structure) for _ in range(self.population_length)]
+        self.population = self.load_generation()
         self.game = Game()
         self.net_index = 0
         self.gen_index = 0
@@ -38,6 +41,25 @@ class GeneticAlgorithm:
             self.game.over()
             self.save_metrics()
             self.next_network()
+        self.save_generation()
+
+    def load_generation(self):
+        population = [Network(self.structure) for _ in range(self.population_length)]
+
+        if os.path.exists("neural_network.pkl") and os.path.exists("structure.pkl"):
+            with open("structure.pkl", "rb") as structure_file:
+                structure = pickle.load(structure_file)
+                if structure == self.structure:
+                    with open("neural_network.pkl", "rb") as network_file:
+                        population = pickle.load(network_file)
+
+        return population
+
+    def save_generation(self):
+        with open("structure.pkl", "wb") as structure_file:
+            pickle.dump(self.structure, structure_file)
+        with open("neural_network.pkl", "wb") as network_file:
+            pickle.dump(self.population, network_file)
 
     def save_metrics(self):
         self.best_gen_fitness = max(network.fitness for network in self.population)
@@ -56,6 +78,7 @@ class GeneticAlgorithm:
     def next_network(self):
         self.net_index += 1
         if self.net_index == self.population_length:
+            self.save_generation()
             self.net_index = 0
             self.gen_index += 1
             self.population = self.next_generation()
@@ -216,5 +239,6 @@ class GeneticAlgorithm:
                             neuron.weights[weight_index] = uniform(-.1, .1)
         return nets[:mutation_range]
 
-genetic = GeneticAlgorithm(1024, [10, 8, 3])
-genetic.run()
+if __name__ == "__main__":
+    genetic = GeneticAlgorithm(1024, [10, 24, 24, 3])
+    genetic.run()
