@@ -6,6 +6,10 @@ The AI learns through genetic evolution, without datasets or supervised training
 
 ---
 
+![demo.gif](assets/demo.gif)
+
+---
+
 ## 🚀 Technologies Used
 
 - Python 3

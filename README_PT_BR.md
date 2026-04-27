@@ -6,6 +6,10 @@ A IA aprende através de evolução genética, sem datasets ou treinamento super
 
 ---
 
+![demo.gif](assets/demo.gif)
+
+---
+
 ## 🚀 Tecnologias Utilizadas
 
 - Python 3
