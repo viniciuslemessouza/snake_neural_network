@@ -1,153 +1,149 @@
-# 🐍 Snake AI com Algoritmo Genético
+# 🐍 Snake AI with Genetic Algorithm
 
-Projeto de Inteligência Artificial utilizando **Redes Neurais** e **Algoritmo Genético** para treinar uma cobra a jogar Snake automaticamente.
+Artificial Intelligence project using **Neural Networks** and a **Genetic Algorithm** to train a snake to play Snake automatically.
 
-A IA aprende através de evolução genética, sem datasets ou treinamento supervisionado. Cada geração melhora com base no desempenho das melhores redes neurais.
+The AI learns through genetic evolution, without datasets or supervised training. Each generation improves based on the performance of the best neural networks.
 
 ---
 
-## 🚀 Tecnologias Utilizadas
+## 🚀 Technologies Used
 
 - Python 3
 - Pygame
-- Redes Neurais do zero
-- Algoritmo Genético
-- Pickle (persistência da população)
+- Neural Networks from scratch
+- Genetic Algorithm
+- Pickle (population persistence)
 
 ---
 
-## 🧠 Como Funciona
+## 🧠 How It Works
 
-A IA controla a cobra utilizando uma rede neural simples.
+The AI controls the snake using a simple neural network.
 
-### Entradas da rede (10 inputs)
+### Network Inputs (10 inputs)
 
-A rede recebe informações do ambiente:
+The network receives information from the environment:
 
-- Perigo na frente
-- Perigo à esquerda
-- Perigo à direita
-- Comida na frente
-- Comida à esquerda
-- Comida à direita
-- Direção atual da cobra:
-  - esquerda
-  - direita
-  - cima
-  - baixo
+- Danger ahead
+- Danger to the left
+- Danger to the right
+- Food ahead
+- Food to the left
+- Food to the right
+- Current snake direction:
+  - left
+  - right
+  - up
+  - down
 
-### Saídas da rede (3 outputs)
+### Network Outputs (3 outputs)
 
-A rede decide entre:
+The network decides between:
 
-- Virar à esquerda
-- Continuar reto
-- Virar à direita
-
----
-
-## 🧬 Algoritmo Genético
-
-A evolução acontece da seguinte forma:
-
-1. Uma população de redes neurais é criada
-2. Cada rede joga uma partida
-3. As melhores redes são selecionadas
-4. Cópias sofrem mutações aleatórias
-5. Uma nova geração é criada
-6. O processo se repete indefinidamente
+- Turn left
+- Move forward
+- Turn right
 
 ---
 
-## 📊 Função de Fitness
+## 🧬 Genetic Algorithm
 
-A pontuação da IA é baseada em:
+The evolution process works as follows:
+
+1. A population of neural networks is created
+2. Each network plays a game
+3. The best networks are selected
+4. Copies receive random mutations
+5. A new generation is created
+6. The process repeats indefinitely
+
+---
+
+## 📊 Fitness Function
 
 ```python
 fitness = (score * 100 + steps * 0.5 - hunger * 2)
 ```
 
-A IA é recompensada por:
+The AI is rewarded for:
 
-- Comer comida
-- Sobreviver mais tempo
+- Eating food
+- Surviving longer
 
-E penalizada por:
+And penalized for:
 
-- Ficar muito tempo sem comer
+- Staying too long without eating
 
 ---
 
-## 📁 Estrutura do Projeto
+## 📁 Project Structure
 
 ```bash
 project/
 │
-├── neural_network
-    └── genetic.py          # Algoritmo Genético principal
-    └── network.py          # Estrutura da rede neural
-    └── neuron.py           # Implementação do neurônio
+├── neural_network/
+│   ├── genetic.py          # Main genetic algorithm
+│   ├── network.py          # Neural network structure
+│   └── neuron.py           # Neuron implementation
 │
 ├── game/
-    └── snake.py            # Lógica do jogo
-    └── player.py           # Player object
-    └── block.py            # Block object
-    └── food.py             # Food object
-│   
-├── requirements.txt        # Dependências
-├── README.md               # README file
+│   ├── snake.py            # Game logic
+│   ├── player.py           # Player object
+│   ├── block.py            # Block object
+│   └── food.py             # Food object
+│
+├── requirements.txt        # Dependencies
+└── README.md               # README file
 ```
 
 ---
 
-## ⚙️ Estrutura da Rede
-
-Estrutura utilizada atualmente:
+## ⚙️ Network Structure
 
 ```python
 [10, 16, 3]
 ```
 
-- 10 neurônios de entrada
-- 16 neurônios ocultos
-- 3 neurônios de saída
+- 10 input neurons
+- 16 hidden neurons
+- 3 output neurons
 
 ---
 
-## 💾 Salvamento Automático
+## 💾 Automatic Saving
 
-A população é salva automaticamente utilizando `pickle`.
+The population is automatically saved using `pickle`.
 
-Arquivos gerados:
+Generated files:
 
 - `neural_network.pkl`
 - `structure.pkl`
 
-Ao iniciar novamente, o treinamento continua da última geração salva.
+When the project starts again, training continues from the last saved generation.
 
 ---
 
-## ▶️ Como Executar
+## ▶️ How to Run
 
-### 1. Clone o repositório
-
-```bash
-git clone https://github.com/seu-usuario/seu-repositorio.git
-```
-
-### 2. Entre na pasta
+### 1. Clone the repository
 
 ```bash
-cd seu-repositorio
+git clone https://github.com/your-username/your-repository.git
 ```
 
-### 3. Instale as dependências
+### 2. Enter the project folder
+
+```bash
+cd your-repository
+```
+
+### 3. Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Execute o projeto
+### 4. Run the project
 
 ```bash
 python genetic.py
@@ -155,64 +151,64 @@ python genetic.py
 
 ---
 
-## 📈 Métricas Exibidas
+## 📈 Displayed Metrics
 
-Durante o treinamento:
+During training:
 
-- Geração atual
-- Rede atual
-- Melhor fitness geral
-- Melhor score geral
-- Melhor fitness da geração
-- Melhor score da geração
-
----
-
-## 🔥 Possíveis Melhorias Futuras
-
-- Cross-over entre redes
-- Mutação adaptativa
-- Mais sensores de visão
-- Redes neurais profundas
-- Paralelização da população
-- Replay das melhores partidas
-- Treinamento acelerado sem renderização
-- Exportação de métricas
-- Visualização gráfica da evolução
+- Current generation
+- Current network
+- Best overall fitness
+- Best overall score
+- Best generation fitness
+- Best generation score
 
 ---
 
-## 📚 Conceitos Aplicados
+## 🔥 Possible Future Improvements
 
-Este projeto utiliza conceitos de:
+- Network crossover
+- Adaptive mutation
+- More vision sensors
+- Deep neural networks
+- Population parallelization
+- Replay system for best games
+- Fast training without rendering
+- Metrics export
+- Graphical evolution visualization
 
-- Inteligência Artificial
+---
+
+## 📚 Concepts Applied
+
+This project uses concepts from:
+
+- Artificial Intelligence
 - Machine Learning
-- Neuroevolução
-- Algoritmos Genéticos
-- Redes Neurais
-- Programação orientada a objetos
+- Neuroevolution
+- Genetic Algorithms
+- Neural Networks
+- Object-Oriented Programming
 
 ---
 
-## 🧪 Exemplo de Funcionamento
+## 🧪 Example of Evolution
 
-A cada geração:
+At every generation:
 
-- As melhores cobras sobrevivem
-- Redes ruins são descartadas
-- Novas redes surgem através de mutações
-- O comportamento melhora gradualmente
+- The best snakes survive
+- Weak networks are discarded
+- New networks emerge through mutations
+- The behavior gradually improves
 
-Com o tempo, a IA aprende:
+Over time, the AI learns to:
 
-- Evitar paredes
-- Evitar o próprio corpo
-- Encontrar comida
-- Sobreviver por mais tempo
+- Avoid walls
+- Avoid its own body
+- Find food
+- Survive longer
 
 ---
 
-## 👨‍💻 Autor
+## 👨‍💻 Author
 
-Desenvolvido por Vinicius Lemes.
+Developed by Vinicius Lemes.
