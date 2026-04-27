@@ -64,11 +64,7 @@ A evolução acontece da seguinte forma:
 A pontuação da IA é baseada em:
 
 ```python
-fitness = (
-    score * 100
-    + steps * 0.5
-    - hunger * 2
-)
+fitness = (score * 100 + steps * 0.5 - hunger * 2)
 ```
 
 A IA é recompensada por:
@@ -87,15 +83,19 @@ E penalizada por:
 ```bash
 project/
 │
-├── genetic.py          # Algoritmo Genético principal
-├── network.py          # Estrutura da rede neural
-├── neuron.py           # Implementação do neurônio
+├── neural_network
+    └── genetic.py          # Algoritmo Genético principal
+    └── network.py          # Estrutura da rede neural
+    └── neuron.py           # Implementação do neurônio
 │
 ├── game/
-│   └── snake.py        # Lógica do jogo
-│
-├── neural_network.pkl  # População salva
-├── structure.pkl       # Estrutura da rede salva
+    └── snake.py            # Lógica do jogo
+    └── player.py           # Player object
+    └── block.py            # Block object
+    └── food.py             # Food object
+│   
+├── requirements.txt        # Dependências
+├── README.md               # README file
 ```
 
 ---
