@@ -211,11 +211,11 @@ class GeneticAlgorithm:
 
     def record_network(self):
         current_fitness = self.population[self.net_index].fitness
-        new_fitness = round((
-                self.game.score * 5000
+        new_fitness = round(
+                self.game.score * 100
                 + self.game.player.steps * 0.5
-                - self.game.player.hunger * 15
-        ) * 0.1)
+                - self.game.player.hunger * 2
+        )
         self.population[self.net_index].fitness = max(current_fitness, new_fitness)
         self.population[self.net_index].score = self.game.score
 
@@ -236,9 +236,9 @@ class GeneticAlgorithm:
                 for neuron in layer:
                     for weight_index in range(len(neuron.weights)):
                         if random() <= self.mutation_rate:
-                            neuron.weights[weight_index] = uniform(-.1, .1)
+                            neuron.weights[weight_index] = uniform(-1, 1)
         return nets[:mutation_range]
 
 if __name__ == "__main__":
-    genetic = GeneticAlgorithm(1024, [10, 24, 24, 3])
+    genetic = GeneticAlgorithm(2048, [10, 16, 3])
     genetic.run()
